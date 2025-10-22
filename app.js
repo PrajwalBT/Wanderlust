@@ -57,7 +57,7 @@ app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));   //for Logion and SignUp 
+passport.use(new LocalStrategy(User.authenticate()));   //for Login and SignUp 
 
 passport.serializeUser(User.serializeUser());     //storing User info. in session
 passport.deserializeUser(User.deserializeUser()); //unstoring User info. from session
@@ -65,6 +65,7 @@ passport.deserializeUser(User.deserializeUser()); //unstoring User info. from se
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.currUser = req.user;
   next();
 });
 
