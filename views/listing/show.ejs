@@ -1,4 +1,8 @@
 <% layout('layouts/boilerplate.ejs') -%>
+<script>
+  const mapToken = "<%= process.env.MAP_TOKEN %>";
+  const listing= <%- JSON.stringify(listing) %>;
+</script>
 <div class="row mt-3">
   <div class="col-8 offset-3"> 
     <h3><b><%= listing.title %></b></h3> 
@@ -27,8 +31,8 @@
   <% } %>
 
   <div class="col-6 offset-3 show-card mb-3">
-    <hr>
     <% if (currUser) { %>
+    <hr>
     <h4>Leave a Review</h4>
     <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
       <div class="mb-3 mt-3">
@@ -58,21 +62,28 @@
     <hr>
     <% } %>
 
-    <p><b>All Reviews</b></p>
-    <div class="row">
-    <% for(review of listing.reviews) { %>
-    <div class="card col-5 ms-3 mb-3">
-      <div class="card-body">
-        <div class="card-title">@<%= review.author.username %></div>
-        <p class="starability-result" data-rating="<%= review.rating %>"></p>
-        <div class="card-text"><%= review.comment %></div>
+    <% if (listing.reviews.length > 0) { %>
+      <p><b>All Reviews</b></p>
+      <div class="row">
+      <% for(review of listing.reviews) { %>
+      <div class="card col-5 ms-3 mb-3">
+        <div class="card-body">
+          <div class="card-title">@<%= review.author.username %></div>
+          <p class="starability-result" data-rating="<%= review.rating %>"></p>
+          <div class="card-text"><%= review.comment %></div>
+        </div>
+        <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" class="mb-3 mt-2">
+          <button class="btn btn-sm btn-dark">Delete</button>
+        </form>
       </div>
-      <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" class="mb-3 mt-2">
-        <button class="btn btn-sm btn-dark">Delete</button>
-      </form>
-    </div>
+      <% } %>
+      </div>
     <% } %>
-    </div>
-
+  </div>
+  <div class="col-6 offset-3 mb-3">
+    <h3>where you'll be</h3>
+    <div id="map"></div>
   </div>
 </div>
+
+<script src="/js/map.js"></script>
